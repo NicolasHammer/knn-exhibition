@@ -10,11 +10,11 @@ class KNN():
         self.training_targets = None
 
         if aggregator == "mode":
-            self.aggregator = stats.mode
+            self.aggregator = (lambda a, axis: stats.mode(a, axis)[0])
         elif aggregator == "mean":
-            self.aggregator = np.mean
+            self.aggregator = (lambda a, axis: np.mean(a, axis))
         elif aggregator == "median":
-            self.aggregator = np.median
+            self.aggregator = (lambda a, axis: np.median(a, axis))
         else:
             raise ValueError(
                 "aggregator must be either \"mode\", \"mean\", or \"median\"")
@@ -38,12 +38,12 @@ class KNN():
             features, self.training_features), axis=1)
         nearest_indicies = (nearest_indicies[1:(self.n_neighbors + 1)]
                             if ignore_first
-                            else nearest_indicies[:self.n_neighbors])
+                            else nearest_indicies[:, 0:self.n_neighbors])
 
-        predictions = np.ndarray(
-            shape=(self.training_targets.shape[0], features.shape[1]))
+        predictions = np.ndarray(shape=(
+            self.training_targets.shape[0], features.shape[1]), dtype=self.training_targets.dtype)
         for sample_idx in range(0, predictions.shape[1]):
-            predictions = self.aggregator(
+            aggregate = self.aggregator(
                 self.training_targets[:, nearest_indicies[sample_idx]], axis=1)
-
+            predictions[:, sample_idx] = aggregate
         return predictions

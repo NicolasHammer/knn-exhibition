@@ -16,7 +16,7 @@ targets = data[:,-1]
 targets = targets.reshape((1, targets.shape[0]))
 train_features, train_targets, test_features, test_targets = train_test_split(features, targets)
 
-model = KNN(n_neighbors=3)
+model = KNN(n_neighbors=5)
 model.fit(train_features, train_targets)
 predictions = model.predict(test_features)
 

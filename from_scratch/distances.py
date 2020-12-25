@@ -39,8 +39,8 @@ def manhattan_distances(X : np.ndarray, Y : np.ndarray) -> np.ndarray:
     n = X.shape[1]
     m = Y.shape[1]
 
-    X_modified = np.reshape(X, (x, n, 1))
-    Y_modified = Y.reshape(Y, (x, 1, m))
+    X_modified = X.reshape((x, n, 1))
+    Y_modified = Y.reshape((x, 1, m))
 
     return np.sum(np.abs(X_modified - Y_modified))
 

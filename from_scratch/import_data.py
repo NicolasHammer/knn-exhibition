@@ -1,7 +1,6 @@
 # Loading packages
 import numpy as np
 import random
-import csv
 
 def train_test_split(features: np.ndarray, targets: np.ndarray, fraction: float = 0.8) -> (np.ndarray, np.ndarray, np.ndarray, np.ndarray):
     """

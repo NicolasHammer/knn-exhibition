@@ -76,14 +76,13 @@ class KNN():
         """
         nearest_indicies = np.argsort(self.distance_function(
             features, self.training_features), axis=1)
-        nearest_indicies = (nearest_indicies[1:(self.n_neighbors + 1)]
+        nearest_indicies = (nearest_indicies[:, 1:(self.n_neighbors + 1)]
                             if ignore_first
                             else nearest_indicies[:, 0:self.n_neighbors])
 
         predictions = np.ndarray(shape=(
             self.training_targets.shape[0], features.shape[1]), dtype=self.training_targets.dtype)
         for sample_idx in range(0, predictions.shape[1]):
-            aggregate = self.aggregator(
-                self.training_targets[:, nearest_indicies[sample_idx]], axis=1)
-            predictions[:, sample_idx] = aggregate
+            aggregate = self.aggregator(self.training_targets[:, nearest_indicies[sample_idx]], axis=1)
+            predictions[:, sample_idx] = aggregate.reshape((aggregate.shape[0]))
         return predictions

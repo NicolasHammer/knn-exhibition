@@ -42,7 +42,7 @@ def manhattan_distances(X : np.ndarray, Y : np.ndarray) -> np.ndarray:
     X_modified = X.reshape((x, n, 1))
     Y_modified = Y.reshape((x, 1, m))
 
-    return np.sum(np.abs(X_modified - Y_modified))
+    return np.sum(np.abs(X_modified - Y_modified), axis = 0)
 
 def cosine_distances(X : np.ndarray, Y : np.ndarray) -> np.ndarray:
     """
@@ -57,5 +57,12 @@ def cosine_distances(X : np.ndarray, Y : np.ndarray) -> np.ndarray:
     ------
     distances (np.ndarray) - a matrix of shape (n, m) containing all of the pairwise distances
     """
-    return 1 - np.matmul(X.T, Y)/(np.linalg.norm(X, ord = 2, axis = 1)
-                                  *np.linalg.norm(Y, ord = 2, axis = 1))
+    distances = np.ndarray(shape = (X.shape[1], Y.shape[1]))
+    for x_idx in range(0, X.shape[1]):
+        for y_idx in range(0, Y.shape[1]):
+            x_vec = X[:, x_idx].flatten()
+            y_vec = Y[:, y_idx].flatten()
+
+            distances[x_idx, y_idx] = 1 - np.dot(x_vec, y_vec)/(np.linalg.norm(x_vec)*np.linalg.norm(y_vec))
+    
+    return distances
